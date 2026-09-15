@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="Modern App and File Download Hub">
+
+    <title>File Hub - App & File Downloads</title>
+
+    <style>
+        /* =========================================================
+           RESET & GLOBAL STYLES
+        ========================================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f5f7fb;
+            --card-bg: #ffffff;
+            --text: #172033;
+            --muted: #667085;
+            --border: #e4e7ec;
+            --primary: #635bff;
+            --primary-hover: #5046e5;
+            --tag-bg: #f0efff;
+            --header-bg: rgba(255, 255, 255, 0.85);
+            --shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
+        }
+
+        body.dark {
+            --bg: #0d1117;
+            --card-bg: #161b22;
+            --text: #f0f6fc;
+            --muted: #8b949e;
+            --border: #30363d;
+            --primary: #7c73ff;
+            --primary-hover: #918aff;
+            --tag-bg: #292450;
+            --header-bg: rgba(13, 17, 23, 0.85);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        body {
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+
+            transition:
+                background 0.3s ease,
+                color 0.3s ease;
+        }
+
+        button,
+        a {
+            font-family: inherit;
+        }
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+
+            background: var(--header-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: auto;
+
+            padding: 18px 24px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #635bff,
+                    #8b5cf6
+                );
+
+            color: white;
+            font-size: 22px;
+
+            box-shadow:
+                0 8px 20px rgba(99, 91, 255, 0.25);
+        }
+
+        .brand-text h1 {
+            font-size: 20px;
+            font-weight: 750;
+            letter-spacing: -0.4px;
+        }
+
+        .brand-text p {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* =========================================================
+           DARK MODE BUTTON
+        ========================================================= */
+
+        .theme-toggle {
+            width: 44px;
+            height: 44px;
+
+            border: 1px solid var(--border);
+            border-radius: 12px;
+
+            background: var(--card-bg);
+            color: var(--text);
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 19px;
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+        }
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+            max-width: 1200px;
+            margin: auto;
+
+            padding: 70px 24px 45px;
+
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            padding: 7px 13px;
+
+            border-radius: 50px;
+
+            background: var(--tag-bg);
+            color: var(--primary);
+
+            font-size: 13px;
+            font-weight: 650;
+
+            margin-bottom: 18px;
+        }
+
+        .hero h2 {
+            max-width: 750px;
+            margin: auto;
+
+            font-size: clamp(32px, 5vw, 54px);
+            line-height: 1.08;
+
+            letter-spacing: -2px;
+        }
+
+        .hero h2 span {
+            color: var(--primary);
+        }
+
+        .hero-description {
+            max-width: 620px;
+
+            margin: 20px auto 0;
+
+            color: var(--muted);
+
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        /* =========================================================
+           SEARCH
+        ========================================================= */
+
+        .search-wrapper {
+            max-width: 550px;
+            margin: 28px auto 0;
+
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+
+            padding: 15px 18px 15px 46px;
+
+            border: 1px solid var(--border);
+            border-radius: 14px;
+
+            outline: none;
+
+            background: var(--card-bg);
+            color: var(--text);
+
+            font-size: 15px;
+
+            box-shadow: var(--shadow);
+
+            transition: border 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+        }
+
+        .search-icon {
+            position: absolute;
+
+            left: 17px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: var(--muted);
+        }
+
+        /* =========================================================
+           APP GRID
+        ========================================================= */
+
+        .apps-section {
+            max-width: 1200px;
+            margin: auto;
+
+            padding: 20px 24px 70px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 22px;
+        }
+
+        .section-title {
+            font-size: 21px;
+            font-weight: 750;
+        }
+
+        .app-count {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .apps-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 22px;
+        }
+
+        /* =========================================================
+           APP CARD
+        ========================================================= */
+
+        .app-card {
+            background: var(--card-bg);
+
+            border: 1px solid var(--border);
+
+            border-radius: 20px;
+
+            padding: 22px;
+
+            box-shadow: var(--shadow);
+
+            display: flex;
+            flex-direction: column;
+
+            min-height: 350px;
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease,
+                border-color 0.25s ease;
+
+            animation: cardAppear 0.4s ease both;
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 18px 40px rgba(16, 24, 40, 0.12);
+
+            border-color: rgba(99, 91, 255, 0.35);
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .app-top {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            margin-bottom: 17px;
+        }
+
+        /* =========================================================
+           APP ICON
+        ========================================================= */
+
+        .app-icon {
+            width: 64px;
+            height: 64px;
+
+            flex-shrink: 0;
+
+            border-radius: 17px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 28px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #635bff,
+                    #8b5cf6
+                );
+
+            color: white;
+
+            box-shadow:
+                0 8px 18px rgba(99, 91, 255, 0.2);
+        }
+
+        .app-info {
+            min-width: 0;
+        }
+
+        .app-name {
+            font-size: 18px;
+            font-weight: 750;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .app-type {
+            color: var(--muted);
+
+            font-size: 13px;
+
+            margin-top: 4px;
+        }
+
+        .app-description {
+            color: var(--muted);
+
+            font-size: 14px;
+
+            line-height: 1.65;
+
+            margin-bottom: 18px;
+
+            flex-grow: 1;
+        }
+
+        /* =========================================================
+           TAGS
+        ========================================================= */
+
+        .metadata {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            padding: 6px 9px;
+
+            border-radius: 8px;
+
+            background: var(--tag-bg);
+            color: var(--text);
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* =========================================================
+           DOWNLOAD BUTTON
+        ========================================================= */
+
+        .download-btn {
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+
+            padding: 13px 16px;
+
+            border: none;
+            border-radius: 12px;
+
+            background: var(--primary);
+            color: white;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            text-decoration: none;
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .download-btn:hover {
+            background: var(--primary-hover);
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px rgba(99, 91, 255, 0.28);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        /* =========================================================
+           EMPTY STATE
+        ========================================================= */
+
+        .empty-state {
+            grid-column: 1 / -1;
+
+            text-align: center;
+
+            padding: 60px 20px;
+
+            color: var(--muted);
+        }
+
+        .empty-state-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        footer {
+            border-top: 1px solid var(--border);
+
+            padding: 25px;
+
+            text-align: center;
+
+            color: var(--muted);
+
+            font-size: 13px;
+        }
+
+        /* =========================================================
+           RESPONSIVE DESIGN
+        ========================================================= */
+
+        @media (max-width: 900px) {
+            .apps-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .header-container {
+                padding: 14px 18px;
+            }
+
+            .brand-text p {
+                display: none;
+            }
+
+            .brand-text h1 {
+                font-size: 18px;
+            }
+
+            .hero {
+                padding:
+                    50px 18px 35px;
+            }
+
+            .hero h2 {
+                letter-spacing: -1px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+            }
+
+            .apps-section {
+                padding:
+                    15px 18px 50px;
+            }
+
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .app-card {
+                min-height: 320px;
+            }
+
+            .section-header {
+                align-items: flex-end;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header>
+
+        <div class="header-container">
+
+            <div class="brand">
+
+                <div class="brand-logo">
+                    📦
+                </div>
+
+                <div class="brand-text">
+                    <h1>File Hub</h1>
+                    <p>Apps & Files</p>
+                </div>
+
+            </div>
+
+            <!-- Dark mode toggle -->
+            <button
+                class="theme-toggle"
+                id="themeToggle"
+                aria-label="Toggle dark mode">
+
+                🌙
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         HERO SECTION
+    ========================================================== -->
+
+    <main>
+
+        <section class="hero">
+
+            <div class="hero-badge">
+                ✨ Latest Downloads
+            </div>
+
+            <h2>
+                Everything you need,
+                <span>in one place.</span>
+            </h2>
+
+            <p class="hero-description">
+                Download apps, tools, documents and other useful
+                files quickly from our simple and modern file hub.
+            </p>
+
+            <!-- Search -->
+            <div class="search-wrapper">
+
+                <span class="search-icon">
+                    🔍
+                </span>
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Search apps or files..."
+                    autocomplete="off">
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             DOWNLOAD SECTION
+        ====================================================== -->
+
+        <section class="apps-section">
+
+            <div class="section-header">
+
+                <h3 class="section-title">
+                    Available Downloads
+                </h3>
+
+                <span
+                    class="app-count"
+                    id="appCount">
+                    0 files
+                </span>
+
+            </div>
+
+
+            <!-- JavaScript dynamically inserts cards here -->
+            <div
+                class="apps-grid"
+                id="appsGrid">
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer>
+
+        © 2026 File Hub · All rights reserved.
+
+    </footer>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script>
+
+        /*
+         * ========================================================
+         * APP / FILE DATA
+         * ========================================================
+         *
+         * Add, remove or modify files here.
+         *
+         * IMPORTANT:
+         *
+         * The "downloadUrl" property is where you put the
+         * REAL URL/path of your downloadable file.
+         *
+         * Examples:
+         *
+         * downloadUrl: "files/my-app.apk"
+         *
+         * downloadUrl: "files/my-document.pdf"
+         *
+         * downloadUrl:
+         * "https://example.com/downloads/my-app.zip"
+         *
+         * If your website and files are hosted on the same server,
+         * you can simply use:
+         *
+         * "files/app.apk"
+         *
+         * Put your files inside a "files" folder next to this
+         * HTML file.
+         */
+
+        const apps = [
+
+            {
+                name: "Square Cube Practice Pro",
+                type: "Android App",
+                description:
+                    "A simple productivity app for managing daily tasks and staying organized.",
+
+                size: "7 MB",
+                version: "1.0.0",
+                platform: "Android",
+
+                icon: "X2",
+
+                /*
+                 * REPLACE THIS WITH YOUR ACTUAL FILE URL.
+                 */
+                downloadUrl: "files/scpractice.apk"
+            },
+
+        ];
+
+
+        /* ========================================================
+           DOM ELEMENTS
+        ======================================================== */
+
+        const appsGrid =
+            document.getElementById("appsGrid");
+
+        const searchInput =
+            document.getElementById("searchInput");
+
+        const appCount =
+            document.getElementById("appCount");
+
+        const themeToggle =
+            document.getElementById("themeToggle");
+
+
+        /* ========================================================
+           RENDER APPS
+        ======================================================== */
+
+        function renderApps(appList) {
+
+            // Clear existing cards
+            appsGrid.innerHTML = "";
+
+            // Update count
+            appCount.textContent =
+                `${appList.length} ${appList.length === 1 ? "file" : "files"}`;
+
+
+            // Empty state
+            if (appList.length === 0) {
+
+                appsGrid.innerHTML = `
+
+                    <div class="empty-state">
+
+                        <div class="empty-state-icon">
+                            🔍
+                        </div>
+
+                        <h3>No files found</h3>
+
+                        <p>
+                            Try searching for another app or file.
+                        </p>
+
+                    </div>
+
+                `;
+
+                return;
+            }
+
+
+            // Create each card
+            appList.forEach((app, index) => {
+
+                const card =
+                    document.createElement("article");
+
+                card.className = "app-card";
+
+                // Slight animation delay
+                card.style.animationDelay =
+                    `${index * 0.05}s`;
+
+
+                card.innerHTML = `
+
+                    <div class="app-top">
+
+                        <div class="app-icon">
+                            ${app.icon}
+                        </div>
+
+                        <div class="app-info">
+
+                            <h3 class="app-name">
+                                ${app.name}
+                            </h3>
+
+                            <p class="app-type">
+                                ${app.type}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <p class="app-description">
+                        ${app.description}
+                    </p>
+
+
+                    <div class="metadata">
+
+                        <span class="tag">
+                            📦 ${app.size}
+                        </span>
+
+                        <span class="tag">
+                            🔖 v${app.version}
+                        </span>
+
+                        <span class="tag">
+                            💻 ${app.platform}
+                        </span>
+
+                    </div>
+
+
+                    <!--
+                        IMPORTANT:
+                        The href comes from app.downloadUrl.
+
+                        Change the downloadUrl in the array above
+                        to point to your real APK/PDF/ZIP/etc.
+                    -->
+
+                    <a
+                        class="download-btn"
+                        href="${app.downloadUrl}"
+                        download>
+
+                        ⬇️
+                        Download
+
+                    </a>
+
+                `;
+
+
+                appsGrid.appendChild(card);
+
+            });
+
+        }
+
+
+        /* ========================================================
+           SEARCH
+        ======================================================== */
+
+        searchInput.addEventListener(
+            "input",
+            function () {
+
+                const searchTerm =
+                    this.value
+                        .trim()
+                        .toLowerCase();
+
+
+                const filteredApps =
+                    apps.filter(app => {
+
+                        return (
+                            app.name
+                                .toLowerCase()
+                                .includes(searchTerm)
+
+                            ||
+
+                            app.description
+                                .toLowerCase()
+                                .includes(searchTerm)
+
+                            ||
+
+                            app.type
+                                .toLowerCase()
+                                .includes(searchTerm)
+
+                            ||
+
+                            app.platform
+                                .toLowerCase()
+                                .includes(searchTerm)
+                        );
+
+                    });
+
+
+                renderApps(filteredApps);
+
+            }
+        );
+
+
+        /* ========================================================
+           DARK MODE
+        ======================================================== */
+
+        function updateThemeIcon() {
+
+            if (
+                document.body.classList.contains("dark")
+            ) {
+
+                themeToggle.textContent = "☀️";
+
+                themeToggle.setAttribute(
+                    "aria-label",
+                    "Switch to light mode"
+                );
+
+            } else {
+
+                themeToggle.textContent = "🌙";
+
+                themeToggle.setAttribute(
+                    "aria-label",
+                    "Switch to dark mode"
+                );
+
+            }
+
+        }
+
+
+        themeToggle.addEventListener(
+            "click",
+            function () {
+
+                document.body.classList.toggle("dark");
+
+                const isDark =
+                    document.body.classList.contains("dark");
+
+
+                /*
+                 * Save the user's preference so the same theme
+                 * is used when they return to the website.
+                 */
+
+                localStorage.setItem(
+                    "darkMode",
+                    isDark ? "true" : "false"
+                );
+
+
+                updateThemeIcon();
+
+            }
+        );
+
+
+        /* ========================================================
+           LOAD SAVED THEME
+        ======================================================== */
+
+        const savedTheme =
+            localStorage.getItem("darkMode");
+
+        if (savedTheme === "true") {
+
+            document.body.classList.add("dark");
+
+        }
+
+        updateThemeIcon();
+
+
+        /* ========================================================
+           INITIAL RENDER
+        ======================================================== */
+
+        renderApps(apps);
+
+    </script>
+
+</body>
+</html>
